@@ -1,0 +1,20 @@
+﻿@model IEnumerable<API_Usage.Models.MarketVolume>
+<h2>Transactions</h2>
+<hr />
+
+@foreach (var item1 in Model)
+{
+    @foreach(var item2 in item1.Property1)
+  {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item2.lastUpdated)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item2.marketPercent)
+    </td>
+</tr>
+
+}
+
+}
