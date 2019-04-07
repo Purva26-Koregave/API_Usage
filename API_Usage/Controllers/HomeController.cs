@@ -62,18 +62,7 @@ namespace API_Usage.Controllers
             return View(companies);
         }
 
-        public IActionResult Statistics()
-        {
-            //Set ViewBag variable first
-            ViewBag.dbSucessComp = 0;
-            List<Stats> stats = GetStats();
-
-            //Save companies in TempData, so they do not have to be retrieved again
-            TempData["Statistics"] = JsonConvert.SerializeObject(stats);
-            //TempData["Companies"] = companies;
-
-            return View(stats);
-        }
+        
 
         public IActionResult Performance()
         {
@@ -113,7 +102,24 @@ namespace API_Usage.Controllers
 
             return View(eff);
         }
+        public IActionResult TopGainers()
+        {
+            //Set ViewBag variable first
+            ViewBag.dbSucessComp = 0;
+            List<Gainers> names = getGainers();
 
+            //Save companies in TempData, so they do not have to be retrieved again
+            TempData["Gainers"] = JsonConvert.SerializeObject(names);
+            //TempData["Companies"] = companies;
+
+            return View(names);
+        }
+
+        public IActionResult AboutUs()
+        {
+            
+            return View();
+        }
         /****
          * The Chart action calls the GetChart method that returns 1 year's equities for the passed symbol.
          * A ViewModel CompaniesEquities containing the list of companies, prices, volumes, avg price and volume.
@@ -203,36 +209,7 @@ namespace API_Usage.Controllers
             return performances;
         }
 
-        public List<Stats> GetStats()
-        {
-            string IEXTrading_API_PATH = BASE_URL + "stats/intraday";
-            string statList = "";
-            List<Stats> stats = null;
-
-            // connect to the IEXTrading API and retrieve information
-            httpClient.BaseAddress = new Uri(IEXTrading_API_PATH);
-            HttpResponseMessage response = httpClient.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
-
-            // read the Json objects in the API response
-            if (response.IsSuccessStatusCode)
-            {
-                statList = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            }
-
-            // now, parse the Json strings as C# objects
-            if (!statList.Equals(""))
-            {
-                // https://stackoverflow.com/a/46280739
-                //JObject result = JsonConvert.DeserializeObject<JObject>(companyList);
-                stats = JsonConvert.DeserializeObject<List<Stats>>(statList);
-                //stats = stats.GetRange(0, 50);
-            }
-
-            return stats;
-        }
-
-
-        public List<MarketVolume> GetMarketVolume()
+    public List<MarketVolume> GetMarketVolume()
         {
             string IEXTrading_API_PATH = BASE_URL + "market";
             string volumeList = "";
@@ -285,6 +262,29 @@ namespace API_Usage.Controllers
 
             }
             return effSpread;
+        }
+
+        public List<Gainers> getGainers()
+        {
+            string IEXTrading_API_PATH = BASE_URL + "stock/market/list/gainers";
+            string gList = "";
+            List<Gainers> glist = null;
+
+            // connect to the IEXTrading API and retrieve information
+            //httpClient.BaseAddress = new Uri(IEXTrading_API_PATH);
+            HttpResponseMessage response = httpClient.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
+
+            // read the Json objects in the API response
+            if (response.IsSuccessStatusCode)
+            {
+                gList = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            }
+            if (!gList.Equals(""))
+            {
+                List<Gainers> list = JsonConvert.DeserializeObject<List<Gainers>>(gList, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                glist = list;
+            }
+            return glist;
         }
 
 

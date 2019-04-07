@@ -1,0 +1,34 @@
+﻿@model IEnumerable<API_Usage.Models.Gainers>
+
+<h2>Top Gainers</h2>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Company Name
+            </th>
+            <th>
+                Latest Price
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.companyName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.latestPrice)
+                    </td>
+                </tr>
+
+            
+
+        }
+
+    </tbody>
+</table>
