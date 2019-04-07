@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace API_Usage.Models
@@ -38,6 +39,7 @@ namespace API_Usage.Models
         public Equity[] chart { get; set; }
     }
 
+    [JsonObject]
     public class Stats
     {
         public Volume volume { get; set; }
@@ -80,11 +82,6 @@ namespace API_Usage.Models
 
     public class Transaction
     {
-        public Class1[] Property1 { get; set; }
-    }
-
-    public class Class1
-    {
         public long effectiveDate { get; set; }
         public string fullName { get; set; }
         public string reportedTitle { get; set; }
@@ -94,17 +91,23 @@ namespace API_Usage.Models
     }
 
 
-    public class MarketVolume
+
+    public class Performance
     {
-        public Class2[] Property1 { get; set; }
+        public string type { get; set; }
+        public string name { get; set; }
+        public float performance { get; set; }
+        public long lastUpdated { get; set; }
     }
 
-    public class Class2
+
+
+    public class MarketVolume
     {
         public string mic { get; set; }
         public string tapeId { get; set; }
         public string venueName { get; set; }
-        public int volume { get; set; }
+        public long volume { get; set; }
         public int tapeA { get; set; }
         public int tapeB { get; set; }
         public int tapeC { get; set; }
@@ -112,6 +115,17 @@ namespace API_Usage.Models
         public long lastUpdated { get; set; }
     }
 
+
+ 
+    public class EffSpread
+    {
+        public int volume { get; set; }
+        public string venue { get; set; }
+        public string venueName { get; set; }
+        public float effectiveSpread { get; set; }
+        public float effectiveQuoted { get; set; }
+        public float priceImprovement { get; set; }
+    }
 
 
 }

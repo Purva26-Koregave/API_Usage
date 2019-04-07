@@ -1,15 +1,15 @@
-﻿@model IEnumerable<API_Usage.Models.MarketVolume>
+﻿@model IEnumerable<API_Usage.Models.EffSpread>
 
-<h2>Market Volume</h2>
+<h2>Effective Spread</h2>
 <hr />
 <table class="table">
     <thead>
         <tr>
             <th>
-                Last Updated
+                venue Name
             </th>
             <th>
-                Market Percent
+                Price Improvement
             </th>
         </tr>
     </thead>
@@ -19,10 +19,10 @@
             
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.lastUpdated)
+                        @Html.DisplayFor(modelItem => item.venueName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.marketPercent)
+                        @Html.DisplayFor(modelItem => item.priceImprovement)
                     </td>
                 </tr>
 

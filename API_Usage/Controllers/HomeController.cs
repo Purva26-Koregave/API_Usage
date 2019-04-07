@@ -75,17 +75,17 @@ namespace API_Usage.Controllers
             return View(stats);
         }
 
-        public IActionResult Transactions(String symbol)
+        public IActionResult Performance()
         {
             //Set ViewBag variable first
             ViewBag.dbSucessComp = 0;
-            List<Transaction> trans = GetTransaction(symbol);
+            List<Performance> perf = GetPerformance();
 
             //Save companies in TempData, so they do not have to be retrieved again
-            TempData["Trans"] = JsonConvert.SerializeObject(trans);
+            TempData["Performance"] = JsonConvert.SerializeObject(perf);
             //TempData["Companies"] = companies;
 
-            return View(trans);
+            return View(perf);
         }
 
         public IActionResult MarketVolume()
@@ -99,6 +99,19 @@ namespace API_Usage.Controllers
             //TempData["Companies"] = companies;
 
             return View(mv);
+        }
+
+        public IActionResult EffSpread(String symbol)
+        {
+            //Set ViewBag variable first
+            ViewBag.dbSucessComp = 0;
+            List<EffSpread> eff = getEffectiveSpread(symbol);
+
+            //Save companies in TempData, so they do not have to be retrieved again
+            TempData["EffSpread"] = JsonConvert.SerializeObject(eff);
+            //TempData["Companies"] = companies;
+
+            return View(eff);
         }
 
         /****
@@ -162,11 +175,11 @@ namespace API_Usage.Controllers
             return companies;
         }
 
-        public List<Transaction> GetTransaction(String symbol)
+        public List<Performance> GetPerformance()
         {
-            string IEXTrading_API_PATH = BASE_URL + "stock/" +symbol+ "insider-summary";
-            string transList = "";
-            List<Transaction> transactions = null;
+            string IEXTrading_API_PATH = BASE_URL + "stock/market/sector-performance";
+            string perfList = "";
+            List<Performance> performances = null;
 
             // connect to the IEXTrading API and retrieve information
             httpClient.BaseAddress = new Uri(IEXTrading_API_PATH);
@@ -175,19 +188,19 @@ namespace API_Usage.Controllers
             // read the Json objects in the API response
             if (response.IsSuccessStatusCode)
             {
-                transList = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                perfList = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             }
 
             // now, parse the Json strings as C# objects
-            if (!transList.Equals(""))
+            if (!perfList.Equals(""))
             {
                 // https://stackoverflow.com/a/46280739
                 //JObject result = JsonConvert.DeserializeObject<JObject>(companyList);
-                transactions = JsonConvert.DeserializeObject<List<Transaction>>(transList);
-                transactions = transactions.GetRange(0, 50);
+                performances = JsonConvert.DeserializeObject<List<Performance>>(perfList);
+                //performances = performances.GetRange(0, 50);
             }
 
-            return transactions;
+            return performances;
         }
 
         public List<Stats> GetStats()
@@ -212,7 +225,7 @@ namespace API_Usage.Controllers
                 // https://stackoverflow.com/a/46280739
                 //JObject result = JsonConvert.DeserializeObject<JObject>(companyList);
                 stats = JsonConvert.DeserializeObject<List<Stats>>(statList);
-                stats = stats.GetRange(0, 50);
+                //stats = stats.GetRange(0, 50);
             }
 
             return stats;
@@ -247,6 +260,33 @@ namespace API_Usage.Controllers
             return marketVolumes;
         }
 
+        public List<EffSpread> getEffectiveSpread(string symbol)
+        {
+            if (symbol == null || symbol == "")
+            {
+                symbol = "aapl";
+            }
+            string IEXTrading_API_PATH = BASE_URL + "stock/"+symbol+"/effective-spread";
+            string effList = "";
+            List<EffSpread> effSpread = null;
+
+            // connect to the IEXTrading API and retrieve information
+            //httpClient.BaseAddress = new Uri(IEXTrading_API_PATH);
+            HttpResponseMessage response = httpClient.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
+
+            // read the Json objects in the API response
+            if (response.IsSuccessStatusCode)
+            {
+                effList = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            }
+            if (!effList.Equals(""))
+            {
+                effSpread = JsonConvert.DeserializeObject<List<EffSpread>>(effList, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            }
+            return effSpread;
+        }
+
 
         /// <summary>
         /// Calls the IEX stock API to get 1 year's chart for the supplied symbol
@@ -256,6 +296,7 @@ namespace API_Usage.Controllers
         public List<Equity> GetChart(string symbol)
         {
             // string to specify information to be retrieved from the API
+            
             string IEXTrading_API_PATH = BASE_URL + "stock/" + symbol + "/batch?types=chart&range=1y";
 
             // initialize objects needed to gather data
