@@ -71,7 +71,7 @@ namespace API_Usage.Controllers
             List<Performance> perf = GetPerformance();
 
             //Save companies in TempData, so they do not have to be retrieved again
-            TempData["Performance"] = JsonConvert.SerializeObject(perf);
+            TempData["Performance"] = JsonConvert.SerializeObject(perf.Take(50));
             //TempData["Companies"] = companies;
 
             return View(perf);
@@ -84,7 +84,7 @@ namespace API_Usage.Controllers
             List<MarketVolume> mv = GetMarketVolume();
 
             //Save companies in TempData, so they do not have to be retrieved again
-            TempData["MarketVolume"] = JsonConvert.SerializeObject(mv);
+            TempData["MarketVolume"] = JsonConvert.SerializeObject(mv.Take(50));
             //TempData["Companies"] = companies;
 
             return View(mv);
@@ -97,7 +97,7 @@ namespace API_Usage.Controllers
             List<EffSpread> eff = getEffectiveSpread(symbol);
 
             //Save companies in TempData, so they do not have to be retrieved again
-            TempData["EffSpread"] = JsonConvert.SerializeObject(eff);
+            TempData["EffSpread"] = JsonConvert.SerializeObject(eff.Take(50));
             //TempData["Companies"] = companies;
 
             return View(eff);
@@ -109,7 +109,7 @@ namespace API_Usage.Controllers
             List<Gainers> names = getGainers();
 
             //Save companies in TempData, so they do not have to be retrieved again
-            TempData["Gainers"] = JsonConvert.SerializeObject(names);
+            TempData["Gainers"] = JsonConvert.SerializeObject(names.Take(50));
             //TempData["Companies"] = companies;
 
             return View(names);
@@ -428,6 +428,102 @@ namespace API_Usage.Controllers
             ViewBag.dbSuccessComp = 1;
             return View("Symbols", companies);
         }
+
+        public IActionResult PopulateMarketVolume()
+        {
+            // retrieve the companies that were saved in the symbols method
+            // saving in TempData is extremely inefficient - the data circles back from the browser
+            // better methods would be to serialize to the hard disk, or save directly into the database
+            //  in the symbols method. This example has been structured to demonstrate one way to save object data
+            //  and retrieve it later
+            List<MarketVolume> volumes = JsonConvert.DeserializeObject<List<MarketVolume>>(TempData["MarketVolume"].ToString());
+
+            foreach (MarketVolume volume in volumes)
+            {
+                //Database will give PK constraint violation error when trying to insert record with existing PK.
+                //So add company only if it doesnt exist, check existence using symbol (PK)
+                if (dbContext.MarketVolume.Where(c => c.MarketVolumeID.Equals(volume.MarketVolumeID)).Count() == 0)
+                {
+                    dbContext.MarketVolume.Add(volume);
+                }
+            }
+
+            dbContext.SaveChanges();
+            ViewBag.dbSuccessComp = 1;
+            return View("MarketVolume", volumes);
+        }
+        public IActionResult PopulateEffSpread()
+        {
+            // retrieve the companies that were saved in the symbols method
+            // saving in TempData is extremely inefficient - the data circles back from the browser
+            // better methods would be to serialize to the hard disk, or save directly into the database
+            //  in the symbols method. This example has been structured to demonstrate one way to save object data
+            //  and retrieve it later
+            List<EffSpread> spreads = JsonConvert.DeserializeObject<List<EffSpread>>(TempData["EffSpread"].ToString());
+
+            foreach (EffSpread spread in spreads)
+            {
+                //Database will give PK constraint violation error when trying to insert record with existing PK.
+                //So add company only if it doesnt exist, check existence using symbol (PK)
+                if (dbContext.EffSpread.Where(c => c.EffSpreadID.Equals(spread.EffSpreadID)).Count() == 0)
+                {
+                    dbContext.EffSpread.Add(spread);
+                }
+            }
+
+            dbContext.SaveChanges();
+            ViewBag.dbSuccessComp = 1;
+            return View("EffSpread", spreads);
+        }
+
+        public IActionResult PopulateTopGainers()
+        {
+            // retrieve the companies that were saved in the symbols method
+            // saving in TempData is extremely inefficient - the data circles back from the browser
+            // better methods would be to serialize to the hard disk, or save directly into the database
+            //  in the symbols method. This example has been structured to demonstrate one way to save object data
+            //  and retrieve it later
+            List<Gainers> names = JsonConvert.DeserializeObject<List<Gainers>>(TempData["Gainers"].ToString());
+
+            foreach (Gainers item in names)
+            {
+                //Database will give PK constraint violation error when trying to insert record with existing PK.
+                //So add company only if it doesnt exist, check existence using symbol (PK)
+                if (dbContext.Gainers.Where(c => c.GainersID.Equals(item.GainersID)).Count() == 0)
+                {
+                    dbContext.Gainers.Add(item);
+                }
+            }
+
+            dbContext.SaveChanges();
+            ViewBag.dbSuccessComp = 1;
+            return View("TopGainers", names);
+        }
+
+        public IActionResult PopulatePerformance()
+        {
+            // retrieve the companies that were saved in the symbols method
+            // saving in TempData is extremely inefficient - the data circles back from the browser
+            // better methods would be to serialize to the hard disk, or save directly into the database
+            //  in the symbols method. This example has been structured to demonstrate one way to save object data
+            //  and retrieve it later
+            List<Performance> performances = JsonConvert.DeserializeObject<List<Performance>>(TempData["Performance"].ToString());
+
+            foreach (Performance item in performances)
+            {
+                //Database will give PK constraint violation error when trying to insert record with existing PK.
+                //So add company only if it doesnt exist, check existence using symbol (PK)
+                if (dbContext.Performance.Where(c => c.PerformanceID.Equals(item.PerformanceID)).Count() == 0)
+                {
+                    dbContext.Performance.Add(item);
+                }
+            }
+
+            dbContext.SaveChanges();
+            ViewBag.dbSuccessComp = 1;
+            return View("Performance", performances);
+        }
+
 
         /// <summary>
         /// Delete all records from tables

@@ -6,29 +6,45 @@
     <thead>
         <tr>
             <th>
-                Last Updated
+                Market Identifier Code
             </th>
             <th>
-                Market Percent
+                Venue Name
+            </th>
+            <th>
+                Amount of traded shares
+            </th>
+            <th>
+                Venue’s percentage of shares traded in the market
             </th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.lastUpdated)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.marketPercent)
-                    </td>
-                </tr>
 
-            
-
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.mic)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.venueName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.volume)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.marketPercent)
+                </td>
+            </tr>
         }
-
+        <tr>
+            <td>
+                <a id="dbopt" asp-controller="Home" asp-action="PopulateMarketVolume"><img src="~/img/button_save-data.png" /></a>
+            </td>
+        </tr>
     </tbody>
 </table>
+<script>
+    alertDbSave(@ViewBag.dbSuccessComp);
+</script>

@@ -6,7 +6,13 @@
     <thead>
         <tr>
             <th>
-                venue Name
+                Venue Name
+            </th>
+            <th>
+                Effective Spread
+            </th>
+            <th>
+                Effective Quoted
             </th>
             <th>
                 Price Improvement
@@ -16,19 +22,29 @@
     <tbody>
         @foreach (var item in Model)
         {
-            
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.venueName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.priceImprovement)
-                    </td>
-                </tr>
 
-            
-
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.venueName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.effectiveSpread)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.effectiveQuoted)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.priceImprovement)
+                </td>
+            </tr>
         }
-
-    </tbody>
-</table>
+            <tr>
+                <td>
+                    <a id="dbopt" asp-controller="Home" asp-action="PopulateEffSpread"><img src="~/img/button_save-data.png" /></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <script>
+    alertDbSave(@ViewBag.dbSuccessComp);
+    </script>

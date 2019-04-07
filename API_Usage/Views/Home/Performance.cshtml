@@ -9,7 +9,7 @@
                 Name
             </th>
             <th>
-                Performance
+                Performance (change percent of the sector for the trading day)
             </th>
         </tr>
     </thead>
@@ -30,5 +30,13 @@
 
         }
 
+        <tr>
+            <td>
+                <a id="dbopt" asp-controller="Home" asp-action="PopulatePerformance"><img src="~/img/button_save-data.png" /></a>
+            </td>
+        </tr>
     </tbody>
 </table>
+<script>
+    alertDbSave(@ViewBag.dbSuccessComp);
+</script>
