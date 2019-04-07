@@ -1,19 +1,23 @@
 ﻿@model IEnumerable<API_Usage.Models.Performance>
 <hr />
 <h1 align="center"><b><u></b>IEX Trading Application</b></u></h1>
-<h2 align="center"><i>This application will help users to get data related to trading as mentioned below</i></h2>
+<h3 align="center"><i>
+    IEX Group operates the Investors Exchange (IEX), a stock exchange for U.S. equities that is built for investors and companies.
+    This application will help users to get data related to trading as mentioned below
+</i></h3>
 <ol>
     <h2>Sector Performance</h2>
-    <p>This returns an array of each sector and performance for the current trading day. Performance is based on each sector ETF.</p>
+    <p>This returns an array of each sector and performance for the current trading day. Performance is based on each sector ETF.
+     An ETF(exchange-traded fund), is a marketable security that tracks a stock index.</p>
     <h2>Market Volume</h2>
-    <p>This returns real time traded volume on U.S. markets.</p>
+    <p>This returns real time traded volume on U.S. markets at different timestamps</p>
     <h2>Effective Spread</h2>
     <p>
         This returns an array of effective spread, eligible volume, and price improvement of a stock, by market. Lower effectiveSpread and higher priceImprovement values are generally considered optimal.
         Effective spread is designed to measure marketable orders executed in relation to the market center’s quoted spread and takes into account hidden and midpoint liquidity available at each market center.
     </p>
     <h2>Top Gainers</h2>
-    <p>This returns top 10 gainer.</p>
+    <p>This returns top 10 companies in terms of profits.</p>
 </ol>
 <hr />
 <center>
